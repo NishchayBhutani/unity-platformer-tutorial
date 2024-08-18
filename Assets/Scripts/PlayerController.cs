@@ -15,15 +15,17 @@ public class PlayerController : MonoBehaviour
     bool isFacingRight = true;
     bool isWallSliding = false;
     bool isWallJumping = false;
-    float currWallJumpTimer;
+    float wallJumpTimer;
+    float wallJumpDirection;
     
     public float moveSpeed = 6f;
-    public float wallSlideSpeed = 6f;
     public float jumpSpeed = 9f;
-    public float wallJumpSpeed = 9f;
+    public float wallSlideSpeed = 2f;
+    public float wallJumpXSpeed = 4f;
+    public float wallJumpYSpeed = 2f;
+    public float wallJumpTime = 0.5f;
     public float playerGroundRadius = 0.2f;
     public float playerVisionRadius = 0.2f;
-    public float wallJumpCoolDown = 1f;
     public GameObject playerGround;
     public GameObject playerVision;
     public LayerMask groundLayerMask;
@@ -31,37 +33,19 @@ public class PlayerController : MonoBehaviour
 
     void Awake() {
         playerRigidBody = GetComponent<Rigidbody2D>();
-        currWallJumpTimer = wallJumpCoolDown;
     }
 
     void Update() {
+        WallSlide();
+        WallJump();
+        
         if((isFacingRight && playerInput.x < 0) || (!isFacingRight && playerInput.x > 0)) {
             Flip();
         }
-
-        if(currWallJumpTimer <= 0) {
-            isWallJumping = false;
-            currWallJumpTimer = wallJumpCoolDown;
-        } else {
-            currWallJumpTimer -= Time.deltaTime;
-        }
-
-        WallSlide();
-    }
-
-    void WallSlide() {
-        if (!CheckGrounded() && CheckWalled() && playerInput.x != 0) {
-                isWallSliding = true;
-            } else {
-                isWallSliding = false;
-            }
     }
 
     void FixedUpdate() {
-        if (isWallSliding) {
-            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, Mathf.Clamp(
-                playerRigidBody.velocity.y, -wallSlideSpeed, float.MaxValue));
-        } else if(!isWallJumping){
+        if(!isWallJumping) {
             playerRigidBody.velocity = new Vector2(playerInput.x * moveSpeed, playerRigidBody.velocity.y);
         }
     }
@@ -76,21 +60,46 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnJump() {
-        if (CheckGrounded()) {
+        if(CheckGrounded()) {
             Debug.Log("player jumped from ground");
             playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, jumpSpeed);
-        } else if(CheckWalled()) {
-            Debug.Log("player walljumped");
-            if(isWallJumping) {
-                return;
-            }
-            isWallJumping = true;
-            currWallJumpTimer = wallJumpCoolDown;
-            float jumpDirection = isFacingRight ? -1 : 1;
-            playerRigidBody.velocity = new Vector2(jumpDirection * wallJumpSpeed, jumpSpeed);
-            Debug.Log(jumpDirection * wallJumpSpeed);
-            Flip();
         }
+        
+        // wall jump
+        if(wallJumpTimer > 0f) {
+            isWallJumping = true;
+            playerRigidBody.velocity = new Vector2(wallJumpXSpeed * wallJumpDirection, wallJumpYSpeed);
+            wallJumpTimer = 0;
+            if (isFacingRight != (wallJumpDirection > 0)) {
+                Flip();
+            }
+            Invoke(nameof(CancelWallJump), wallJumpTime + 0.1f);
+        }
+    }
+
+    void WallSlide() {
+        if(CheckWalled() && !CheckGrounded() && playerInput.x != 0f) {
+            isWallSliding = true;
+            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, Mathf.Clamp(playerRigidBody.velocity.y, -wallSlideSpeed, float.MaxValue));
+        } else {
+            isWallSliding = false;
+        }
+    }
+
+    void WallJump() {
+        if(isWallSliding) {
+            isWallJumping = false;
+            wallJumpDirection = isFacingRight ? -1 : 1;
+            wallJumpTimer = wallJumpTime;
+
+            CancelInvoke(nameof(CancelWallJump));
+        } else if(wallJumpTimer > 0f) {
+            wallJumpTimer -= Time.deltaTime;
+        }
+    }
+
+    private void CancelWallJump() {
+        isWallJumping = false;
     }
 
     bool CheckGrounded() {
