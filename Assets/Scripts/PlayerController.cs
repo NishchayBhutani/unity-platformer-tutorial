@@ -15,14 +15,12 @@ public class PlayerController : MonoBehaviour
     bool isFacingRight = true;
     bool isWallSliding = false;
     bool isWallJumping = false;
-    float wallJumpTimer;
     float wallJumpDirection;
     
     public float moveSpeed = 6f;
     public float jumpSpeed = 9f;
     public float wallSlideSpeed = 2f;
-    public float wallJumpXSpeed = 4f;
-    public float wallJumpYSpeed = 2f;
+    public Vector2 wallJumpSpeed = new Vector2(5f, 5f);
     public float wallJumpTime = 0.5f;
     public float playerGroundRadius = 0.2f;
     public float playerVisionRadius = 0.2f;
@@ -37,9 +35,8 @@ public class PlayerController : MonoBehaviour
 
     void Update() {
         WallSlide();
-        WallJump();
         
-        if((isFacingRight && playerInput.x < 0) || (!isFacingRight && playerInput.x > 0)) {
+        if(!isWallJumping && ((isFacingRight && playerInput.x < 0) || (!isFacingRight && playerInput.x > 0))) {
             Flip();
         }
     }
@@ -64,17 +61,19 @@ public class PlayerController : MonoBehaviour
             Debug.Log("player jumped from ground");
             playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, jumpSpeed);
         }
-        
-        // wall jump
-        if(wallJumpTimer > 0f) {
+        if(isWallSliding && !isWallJumping) {
             isWallJumping = true;
-            playerRigidBody.velocity = new Vector2(wallJumpXSpeed * wallJumpDirection, wallJumpYSpeed);
-            wallJumpTimer = 0;
-            if (isFacingRight != (wallJumpDirection > 0)) {
+            wallJumpDirection = isFacingRight ? -1 : 1;
+            playerRigidBody.velocity = new Vector2(wallJumpDirection * wallJumpSpeed.x, wallJumpSpeed.y);
+            if(wallJumpDirection == 1 && isFacingRight == false || wallJumpDirection == -1 && isFacingRight == true) {
                 Flip();
             }
-            Invoke(nameof(CancelWallJump), wallJumpTime + 0.1f);
+            Invoke(nameof(CancelWallJump), wallJumpTime);
         }
+    }
+
+    void CancelWallJump() {
+        isWallJumping = false;
     }
 
     void WallSlide() {
@@ -84,22 +83,6 @@ public class PlayerController : MonoBehaviour
         } else {
             isWallSliding = false;
         }
-    }
-
-    void WallJump() {
-        if(isWallSliding) {
-            isWallJumping = false;
-            wallJumpDirection = isFacingRight ? -1 : 1;
-            wallJumpTimer = wallJumpTime;
-
-            CancelInvoke(nameof(CancelWallJump));
-        } else if(wallJumpTimer > 0f) {
-            wallJumpTimer -= Time.deltaTime;
-        }
-    }
-
-    private void CancelWallJump() {
-        isWallJumping = false;
     }
 
     bool CheckGrounded() {

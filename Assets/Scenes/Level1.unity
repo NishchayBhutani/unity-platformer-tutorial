@@ -440,7 +440,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -917,6 +917,7 @@ MonoBehaviour:
   wallSlideSpeed: 2
   wallJumpXSpeed: 8
   wallJumpYSpeed: 8
+  wallJumpTime: 0.5
   playerGroundRadius: 0.2
   playerVisionRadius: 0.2
   playerGround: {fileID: 1846369820}
