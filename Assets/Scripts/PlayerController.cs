@@ -9,19 +9,22 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-
+    
     Vector2 playerInput;
     Rigidbody2D playerRigidBody;
     bool isFacingRight = true;
     bool isWallSliding = false;
     bool isWallJumping = false;
+    bool isDashing = false;
     float wallJumpDirection;
     
     public float moveSpeed = 6f;
     public float jumpSpeed = 9f;
     public float wallSlideSpeed = 2f;
+    public float dashSpeed = 15f;
     public Vector2 wallJumpSpeed = new Vector2(5f, 5f);
     public float wallJumpTime = 0.5f;
+    public float dashTime = 0.7f;
     public float playerGroundRadius = 0.2f;
     public float playerVisionRadius = 0.2f;
     public GameObject playerGround;
@@ -42,7 +45,7 @@ public class PlayerController : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if(!isWallJumping) {
+        if(!isWallJumping && !isDashing) {
             playerRigidBody.velocity = new Vector2(playerInput.x * moveSpeed, playerRigidBody.velocity.y);
         }
     }
@@ -74,6 +77,18 @@ public class PlayerController : MonoBehaviour
 
     void CancelWallJump() {
         isWallJumping = false;
+    }
+
+    void OnDash() {
+        isDashing = true;
+        Vector2 normalizedPlayerInput = playerInput.normalized;
+        playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x + normalizedPlayerInput.x * dashSpeed, 
+            playerRigidBody.velocity.y + normalizedPlayerInput.y * dashSpeed);
+        Invoke(nameof(CancelDash), dashTime);
+    }
+
+    void CancelDash() {
+        isDashing = false;
     }
 
     void WallSlide() {
