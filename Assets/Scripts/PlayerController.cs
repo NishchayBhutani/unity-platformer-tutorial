@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     bool isWallJumping = false;
     bool isDashing = false;
     float wallJumpDirection;
+    TrailRenderer trailRenderer;
     
     public float moveSpeed = 6f;
     public float jumpSpeed = 9f;
@@ -34,6 +35,8 @@ public class PlayerController : MonoBehaviour
 
     void Awake() {
         playerRigidBody = GetComponent<Rigidbody2D>();
+        trailRenderer = GetComponent<TrailRenderer>();
+        trailRenderer.emitting = false;
     }
 
     void Update() {
@@ -81,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
     void OnDash() {
         isDashing = true;
+        trailRenderer.emitting = true;
         Vector2 normalizedPlayerInput = playerInput.normalized;
         playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x + normalizedPlayerInput.x * dashSpeed, 
             playerRigidBody.velocity.y + normalizedPlayerInput.y * dashSpeed);
@@ -89,6 +93,7 @@ public class PlayerController : MonoBehaviour
 
     void CancelDash() {
         isDashing = false;
+        trailRenderer.emitting = false;
     }
 
     void WallSlide() {
