@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
     }
 
     bool CheckWalled() {
+        Debug.Log(Physics2D.OverlapCircle(playerVision.transform.position, playerVisionRadius, wallLayerMask));
         return Physics2D.OverlapCircle(playerVision.transform.position, playerVisionRadius, wallLayerMask);
     }
 
