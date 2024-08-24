@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Styles/mainmenubuttons.uss?fileID=7433441132597879392&amp;guid=35d59c3debc9f8549a4ca76e232c56e3&amp;type=3#mainmenubuttons" />
+    <ui:VisualElement name="MenuContainer" style="flex-grow: 1; flex-direction: row; align-items: center;">
+        <ui:VisualElement name="OptionsContainer" style="flex-grow: 1; align-items: stretch; justify-content: center; align-self: stretch; font-size: 34px; width: 40%; height: 100%; flex-direction: column;">
+            <ui:VisualElement name="ButtonsContainer" style="flex-grow: 0; align-items: stretch;">
+                <ui:Button text="Start Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="StartButton" class="mainMenuButton" />
+                <ui:Button text="Settings" parse-escape-sequences="true" display-tooltip-when-elided="true" name="SettingsButton" class="mainMenuButton" />
+                <ui:Button text="Quit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="QuitButton" class="mainMenuButton" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Heading" />
+        <ui:VisualElement name="BackgroundContainer" style="flex-grow: 1; width: 60%; height: 100%;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     float wallJumpDirection;
     TrailRenderer trailRenderer;
     
+    public float jumpCutoff = 0.5f;
     public float moveSpeed = 6f;
     public float jumpSpeed = 9f;
     public float wallSlideSpeed = 2f;
@@ -58,14 +59,21 @@ public class PlayerController : MonoBehaviour
         transform.Rotate(0, 180, 0);
     }
 
-    void OnMove(InputValue inputValue) {
-        playerInput = inputValue.Get<Vector2>();
+    public void OnMove(InputAction.CallbackContext context) {
+        playerInput = context.ReadValue<Vector2>();
     }
 
-    void OnJump() {
-        if(CheckGrounded()) {
-            Debug.Log("player jumped from ground");
-            playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, jumpSpeed);
+    public void OnJump(InputAction.CallbackContext context) {
+        if(context.performed) {
+            if(CheckGrounded()) {
+                Debug.Log("player jumped from ground");
+                playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, jumpSpeed);
+            }
+        } else if(context.canceled) {
+            if(CheckGrounded()) {
+                Debug.Log("player jumped canceled from ground");
+                playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x, jumpSpeed * jumpCutoff);
+            }
         }
         if(isWallSliding && !isWallJumping) {
             isWallJumping = true;
@@ -82,18 +90,22 @@ public class PlayerController : MonoBehaviour
         isWallJumping = false;
     }
 
-    void OnDash() {
+    public void OnDash() {
         isDashing = true;
         trailRenderer.emitting = true;
+        /*
+        Disabling gravity to make sure the player travels equal dash distance irrespective of direction(upward direction would be more affected by gravity and hence the player would travel less distance in the upward direction due to gravity)
+        */
+        playerRigidBody.gravityScale = 0f; 
         Vector2 normalizedPlayerInput = playerInput.normalized;
-        playerRigidBody.velocity = new Vector2(playerRigidBody.velocity.x + normalizedPlayerInput.x * dashSpeed, 
-            playerRigidBody.velocity.y + normalizedPlayerInput.y * dashSpeed);
+        playerRigidBody.velocity = new Vector2(normalizedPlayerInput.x * dashSpeed, normalizedPlayerInput.y * dashSpeed);
         Invoke(nameof(CancelDash), dashTime);
     }
 
     void CancelDash() {
         isDashing = false;
         trailRenderer.emitting = false;
+        playerRigidBody.gravityScale = 3f; // turning on gravity after dash
     }
 
     void WallSlide() {
@@ -110,7 +122,6 @@ public class PlayerController : MonoBehaviour
     }
 
     bool CheckWalled() {
-        Debug.Log(Physics2D.OverlapCircle(playerVision.transform.position, playerVisionRadius, wallLayerMask));
         return Physics2D.OverlapCircle(playerVision.transform.position, playerVisionRadius, wallLayerMask);
     }
 

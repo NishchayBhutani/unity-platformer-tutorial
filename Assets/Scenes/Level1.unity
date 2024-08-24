@@ -274,10 +274,15 @@ PolygonCollider2D:
     m_Paths:
     - - {x: 8.155879, y: 13.66049}
       - {x: 5.474609, y: 13.711574}
-      - {x: -6.275831, y: 13.7085085}
-      - {x: -6.318412, y: -6.852225}
-      - {x: 20.17611, y: -6.8522234}
-      - {x: 20.122608, y: 13.675524}
+      - {x: -6.1355944, y: 13.778628}
+      - {x: -6.136117, y: -6.258475}
+      - {x: 20.125364, y: -6.245509}
+      - {x: 20.066063, y: 3.7816582}
+      - {x: 20.052946, y: 4.1787615}
+      - {x: 20.085983, y: 4.976752}
+      - {x: 20.056293, y: 8.632273}
+      - {x: 20.080511, y: 9.623667}
+      - {x: 19.897966, y: 13.643433}
   m_UseDelaunayMesh: 0
 --- !u!4 &91292817
 Transform:
@@ -732,9 +737,9 @@ CompositeCollider2D:
       - X: 200000000
         Y: -100000000
     - - X: 160000000
-        Y: -30000000
+        Y: -20000000
       - X: 150000000
-        Y: -30000000
+        Y: -20000000
       - X: 150000000
         Y: -80000000
       - X: 160000000
@@ -754,8 +759,8 @@ CompositeCollider2D:
       - {x: 0, y: 3.999971}
       - {x: 0.000029300001, y: 0}
     - - {x: 15.999971, y: -8}
-      - {x: 15.999971, y: -3}
-      - {x: 15, y: -3.0000293}
+      - {x: 15.999971, y: -2}
+      - {x: 15, y: -2.0000293}
       - {x: 15.000029, y: -8}
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
@@ -1012,6 +1017,16 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
+  - first: {x: 15, y: -3, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 0
+      m_TileSpriteIndex: 0
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
   - first: {x: 19, y: -3, z: 0}
     second:
       serializedVersion: 2
@@ -1224,13 +1239,13 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 34
+  - m_RefCount: 35
     m_Data: {fileID: 11400000, guid: a66550899a7a4f04b9e561aae13f5c28, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 34
+  - m_RefCount: 35
     m_Data: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 34
+  - m_RefCount: 35
     m_Data:
       e00: 1
       e01: 0
@@ -1249,7 +1264,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 34
+  - m_RefCount: 35
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -1379,20 +1394,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f318dc4bf4c0045b654821344cac30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpCutoff: 0.5
   moveSpeed: 6
-  jumpSpeed: 9
+  jumpSpeed: 11
   wallSlideSpeed: 2
   dashSpeed: 15
-  wallJumpSpeed: {x: 5, y: 9}
+  wallJumpSpeed: {x: 5, y: 11}
   wallJumpTime: 0.5
   dashTime: 0.3
-  playerGroundRadius: 0.2
+  playerGroundRadius: 0.38
   playerVisionRadius: 0.2
   playerGround: {fileID: 1846369820}
   playerVision: {fileID: 1277890182}
   groundLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   wallLayerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -1411,7 +1427,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 6200000, guid: f420e152503750940b19364f80c2618a, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1481,7 +1497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 535f3196ff4e67247823a78e40404c15, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -1492,7 +1508,55 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1233270306}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2b0557c0-aa07-4f79-8799-595d2df1680f
+    m_ActionName: Land/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1233270306}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 53886900-a75e-4d0a-94b3-1cc934c1f648
+    m_ActionName: Land/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1233270306}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: ca574edf-1256-4258-9965-2d06d7c82920
+    m_ActionName: Land/Dash[/Keyboard/leftShift]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Land
@@ -1810,13 +1874,13 @@ CompositeCollider2D:
         Y: -30000000
       - X: 60000000
         Y: -30000000
-    - - X: 160000000
+    - - X: 150000000
         Y: -20000000
       - X: 100000000
         Y: -20000000
       - X: 100000000
         Y: -30000000
-      - X: 160000000
+      - X: 150000000
         Y: -30000000
     - - X: 200000000
         Y: -100000000
@@ -1832,8 +1896,8 @@ CompositeCollider2D:
       - {x: 19.999971, y: 4}
       - {x: 1, y: 3.999971}
       - {x: 1.0000293, y: 3}
-    - - {x: 15.999971, y: -3}
-      - {x: 15.999971, y: -2}
+    - - {x: 14.999971, y: -3}
+      - {x: 14.999971, y: -2}
       - {x: 10, y: -2.0000293}
       - {x: 10.00003, y: -3}
     - - {x: 5.999971, y: -3}
@@ -2279,16 +2343,6 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: 15, y: -3, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741825
   - first: {x: 1, y: 3, z: 0}
     second:
       serializedVersion: 2
@@ -2481,13 +2535,13 @@ Tilemap:
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 51
+  - m_RefCount: 50
     m_Data: {fileID: 11400000, guid: a66550899a7a4f04b9e561aae13f5c28, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 51
+  - m_RefCount: 50
     m_Data: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 51
+  - m_RefCount: 50
     m_Data:
       e00: 1
       e01: 0
@@ -2506,7 +2560,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 51
+  - m_RefCount: 50
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
