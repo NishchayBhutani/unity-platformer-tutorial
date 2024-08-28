@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     bool isDashing = false;
     float wallJumpDirection;
     TrailRenderer trailRenderer;
+    Animator animator;
     
     public float jumpCutoff = 0.5f;
     public float moveSpeed = 6f;
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody2D>();
         trailRenderer = GetComponent<TrailRenderer>();
         trailRenderer.emitting = false;
+        animator = GetComponent<Animator>();
     }
 
     void Update() {
@@ -46,6 +48,8 @@ public class PlayerController : MonoBehaviour
         if(!isWallJumping && ((isFacingRight && playerInput.x < 0) || (!isFacingRight && playerInput.x > 0))) {
             Flip();
         }
+        
+        animator.SetFloat("XVelocity", playerRigidBody.velocity.x);
     }
 
     void FixedUpdate() {
