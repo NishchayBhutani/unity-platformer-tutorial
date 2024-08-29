@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
         
-        animator.SetFloat("XVelocity", playerRigidBody.velocity.x);
+        animator.SetBool("isMoving", playerInput.x != 0);
     }
 
     void FixedUpdate() {
